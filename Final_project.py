@@ -254,5 +254,60 @@ new_file_name = 'FinalDataSet.xlsx'
 if os.path.exists(new_file_name):
     os.remove(new_file_name)
 new_wb.save(new_file_name)
+ 
+print(f"saved to {new_file_name}")
 
-print(f"Summary created and saved to {new_file_name}")
+import os
+from openpyxl import load_workbook
+
+# Load the workbook
+wb1 = load_workbook('Updated_Material_Data_Final_Cleaned.xlsx')
+wb2 = load_workbook('FinalDataSet.xlsx')
+
+# Define the ranges to copy for each material
+ranges_to_copy = {
+    'Aggregates_Sand': (13, 20),
+    'Aluminium': (31, 36),
+    'Asphalt': (24, 26),
+    'Bitumen': (6, 10),
+    'Cement_and_Mortar': (61, 67),
+    'Ceramic': (6, 9),
+    'Clay_Bricks': (2, 6),
+    'Concrete': (283, 286),
+    'Glass': (70, 76),
+    'Insulation': (9, 14),
+    'Paint': (5, 6),
+    'Plaster': (7, 10),
+    'Rubber': (5, 6),
+    'Steel': (81, 86),
+    'Timber': (49, 60),
+    'Vinyl': (6, 8)
+}
+
+# Create a new sheet in the FinalDataSet.xlsx file
+if 'Material Data' in wb2.sheetnames:
+    wb2.remove(wb2['Material Data'])
+new_ws = wb2.create_sheet('Material Data')
+
+# Set the header
+new_ws.cell(row=1, column=1).value = 'Main Material'
+new_ws.cell(row=1, column=2).value = 'Sample Size'
+new_ws.cell(row=1, column=3).value = 'Max Embodied Carbon (kg CO2e/kg)'
+new_ws.cell(row=1, column=4).value = 'Standard Deviation Embodied Carbon (kg CO2e/kg)'
+new_ws.cell(row=1, column=5).value = 'Variance Based on a Sample (Excel Var Function) Embodied Carbon (kg CO2e/kg)'
+
+row_index = 2
+for sheet_name, (start_row, end_row) in ranges_to_copy.items():
+    ws = wb1[sheet_name]
+    for row in range(start_row, end_row + 1):
+        new_ws.cell(row=row_index, column=1).value = ws.cell(row=row, column=1).value
+        new_ws.cell(row=row_index, column=2).value = ws.cell(row=row, column=2).value
+        new_ws.cell(row=row_index, column=3).value = ws.cell(row=row, column=5).value
+        new_ws.cell(row=row_index, column=4).value = ws.cell(row=row, column=6).value
+        new_ws.cell(row=row_index, column=5).value = ws.cell(row=row, column=7).value
+        row_index += 1
+
+# Save the workbook
+wb2.save('FinalDataSet.xlsx')
+
+print(f"Material data created and saved to FinalDataSet.xlsx")
