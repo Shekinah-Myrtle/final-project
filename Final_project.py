@@ -310,7 +310,6 @@ wb2.save('FinalDataSet.xlsx')
 
 print(f"Material data created and saved to FinalDataSet.xlsx")
 
-import pandas as pd
 
 # Load the data
 df = pd.read_excel('FinalDataSet.xlsx', sheet_name='Material DQI')
@@ -351,3 +350,105 @@ df = df.drop([row-1 for row in rows_to_remove], axis=0).reset_index(drop=True)
 # Save the updated DataFrame to the Excel file
 with pd.ExcelWriter('FinalDataSet.xlsx', mode='a', if_sheet_exists='replace') as writer:
     df.to_excel(writer, sheet_name='Material DQI', index=False)
+
+# Load the workbook
+material_wb = load_workbook('Updated_Material_Data_Final_Cleaned.xlsx')
+wb = load_workbook('FinalDataSet.xlsx')
+
+# Create a new sheet
+try:
+    new_ws = wb['Material_Data1']
+    wb.remove(new_ws)
+    new_ws = wb.create_sheet('Material_Data1')
+except KeyError:
+    new_ws = wb.create_sheet('Material_Data1')
+
+# Set the header
+headers = ['Main Material', 'Sample Size', 'DQI Sample Size (Max 10)', 'DQI Total - % (Max 100%)', 
+           'DQI Temporal (Max 5)', 'DQI Geographic (Max 5)', 'DQI Transparency (Max 5)']
+
+for col, header in enumerate(headers, start=1):
+    new_ws.cell(row=1, column=col).value = header
+    
+# Define the row ranges for each material sheet
+ranges_to_copy = {
+    'Aggregates_Sand': (50, 56),
+    'Aluminium': (68, 73),
+    'Asphalt': (38, 40),
+    'Bitumen': (30, 34),
+    'Cement_and_Mortar': (79, 85),
+    'Clay_Bricks': (19, 23),
+    'Concrete': (297, 300),
+    'Glass': (90, 96),
+    'Insulation': None,  # Add row range if needed
+    'Paint': None,  # Add row range if needed
+    'Plaster': None,  # Add row range if needed
+    'Rubber': None,  # Add row range if needed
+    'Steel': (98, 103),
+    'Timber': (78, 89),
+    'Vinyl': None  # Add row range if needed
+}
+
+row_index = 2
+for sheet_name, row_range in ranges_to_copy.items():
+    if row_range is not None:
+        ws = material_wb[sheet_name]
+        for row in range(row_range[0], row_range[1] + 1):
+            for col in range(1, 8):
+                new_ws.cell(row=row_index, column=col).value = ws.cell(row=row, column=col).value
+            row_index += 1
+
+# Save the workbook
+wb.save('FinalDataSet.xlsx')
+
+
+
+# Load the workbook
+material_wb = load_workbook('Updated_Material_Data_Final_Cleaned.xlsx')
+wb = load_workbook('FinalDataSet.xlsx')
+
+# Create a new sheet
+try:
+    new_ws = wb['Material_Data2']
+    wb.remove(new_ws)
+    new_ws = wb.create_sheet('Material_Data2')
+except KeyError:
+    new_ws = wb.create_sheet('Material_Data2')
+
+# Set the header
+headers = ['Material', 'Density (kg m-3)', 'Specific heat (J kg-1 K-1)', 'Thermal Diffusivity (M^2 S-1)']
+
+for col, header in enumerate(headers, start=1):
+    new_ws.cell(row=1, column=col).value = header
+
+# Define the row ranges for each material sheet
+ranges_to_copy = {
+    'Aggregates_Sand': (70, 72),
+    'Aluminium': (78, 78),
+    'Asphalt': (44, 46),
+    'Bitumen': (36, 37),
+    'Cement_and_Mortar': (88, 99),
+    'Ceramic': (32, 39),
+    'Clay_Bricks': (25, 37),
+    'Concrete': (306, 428),
+    'Glass': (101, 117),
+    'Insulation': (44, 83),
+    'Plaster': (35, 57),
+    'Rubber': (27, 30),
+    'Steel': (118, 120),
+    'Timber': (92, 135),
+    'Vinyl': (32, 32)
+}
+
+row_index = 2
+for sheet_name, row_range in ranges_to_copy.items():
+    ws = material_wb[sheet_name]
+    for row in range(row_range[0], row_range[1] + 1):
+        new_ws.cell(row=row_index, column=1).value = ws.cell(row=row, column=1).value
+        new_ws.cell(row=row_index, column=2).value = ws.cell(row=row, column=5).value
+        new_ws.cell(row=row_index, column=3).value = ws.cell(row=row, column=6).value
+        new_ws.cell(row=row_index, column=4).value = ws.cell(row=row, column=7).value
+        row_index += 1
+
+# Save the workbook
+wb.save('FinalDataSet.xlsx')
