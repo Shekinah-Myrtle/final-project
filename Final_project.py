@@ -257,8 +257,6 @@ new_wb.save(new_file_name)
  
 print(f"saved to {new_file_name}")
 
-import os
-from openpyxl import load_workbook
 
 # Load the workbook
 wb1 = load_workbook('Updated_Material_Data_Final_Cleaned.xlsx')
@@ -311,3 +309,45 @@ for sheet_name, (start_row, end_row) in ranges_to_copy.items():
 wb2.save('FinalDataSet.xlsx')
 
 print(f"Material data created and saved to FinalDataSet.xlsx")
+
+import pandas as pd
+
+# Load the data
+df = pd.read_excel('FinalDataSet.xlsx', sheet_name='Material DQI')
+
+# Rename material column for specific rows
+material_renames = {
+    67: 'Portland Slag Cement',
+    68: 'Portland Slag Cement',
+    70: 'Portland Pozzolana Cement',
+    71: 'Portland Pozzolana Cement',
+    73: 'Portland Fly Ash Cement',
+    74: 'Portland Fly Ash Cement',
+    75: 'Portland Fly Ash Cement',
+    76: 'Portland Fly Ash Cement',
+    78: 'Portland Limestone Cement',
+    79: 'Portland Limestone Cement',
+    80: 'Portland Limestone Cement',
+    81: 'Portland Limestone Cement',
+    83: 'Portland Composite Cement',
+    84: 'Portland Composite Cement',
+    86: 'Blast Furnace Cement',
+    87: 'Blast Furnace Cement',
+    88: 'Blast Furnace Cement',
+    90: 'Pozzolanoc Cement',
+    91: 'Pozzolanoc Cement',
+    93: 'Composite Cement',
+    94: 'Composite Cement'
+}
+
+for index, new_name in material_renames.items():
+    df.loc[index-1, 'Materials'] = new_name
+
+# Remove specific rows
+rows_to_remove = [17, 18, 24, 25, 26, 49, 50, 51, 66, 69, 72, 77, 82, 85, 89, 92, 95, 96, 104, 112, 113, 202, 203, 204, 270, 271, 273, 284, 294, 301, 308, 315, 327, 375, 376, 377]
+
+df = df.drop([row-1 for row in rows_to_remove], axis=0).reset_index(drop=True)
+
+# Save the updated DataFrame to the Excel file
+with pd.ExcelWriter('FinalDataSet.xlsx', mode='a', if_sheet_exists='replace') as writer:
+    df.to_excel(writer, sheet_name='Material DQI', index=False)
