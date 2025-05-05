@@ -109,3 +109,86 @@ new_file_name = 'Updated_Material_Data_New.xlsx'
 wb.save(os.path.join(current_dir, new_file_name))
 
 print(f"File saved as {new_file_name} in {current_dir}")
+
+# Load the workbook
+wb = load_workbook('Updated_Material_Data_New.xlsx')
+
+# Iterate over each sheet
+for sheet_name in wb.sheetnames:
+    ws = wb[sheet_name]
+    print(f"Processing sheet: {sheet_name}")
+    
+    # Delete columns K to Z (11 and above)
+    while ws.max_column > 10:
+        ws.delete_cols(11)
+
+# Save the workbook to a new file
+new_file_name = 'Updated_Material_Data_Final.xlsx'
+if os.path.exists(new_file_name):
+    os.remove(new_file_name)
+wb.save(new_file_name)
+
+print(f"Columns K to Z deleted and saved to {new_file_name}")
+
+# Load the workbook
+wb = load_workbook('Updated_Material_Data_Final.xlsx')
+
+# Define the ranges to clear for each material
+ranges_to_clear = {
+    'Aggregates_Sand': [(1, 12, 'C', 'G')],
+    'Aluminium': [(1, 7, 'C', 'G'), (9, 14, 'C', 'G'), (16, 30, 'C', 'G')],
+    'Asphalt': [(1, 11, 'C', 'G'), (14, 23, 'C', 'G')],
+    'Bitumen': [(1, 4, 'C', 'G')],
+    'Cement_and_Mortar': [(1, 5, 'C', 'G'), (7, 8, 'C', 'G'), (13, 16, 'C', 'G'), (18, 21, 'C', 'G'), (23, 24, 'C', 'G'), (26, 28, 'C', 'G'), (30, 31, 'C', 'G'), (33, 34, 'C', 'G'), (36, 60, 'C', 'G')],
+    'Ceramic': [(1, 5, 'C', 'G')],
+    'Concrete': [(1, 57, 'C', 'G'), (58, 86, 'C', 'G'), (88, 144, 'E', 'E'), (146, 195, 'A', 'F'), (191, 195, 'F', 'F'), (197, 200, 'F', 'F'), (201, 204, 'A', 'G'), (206, 281, 'E', 'E')],
+    'Glass': [(1, 68, 'C', 'G')],
+    'Insulation': [(1, 7, 'C', 'G')],
+    'Paint': [(1, 4, 'C', 'G')],
+    'Plaster': [(1, 5, 'C', 'G')],
+    'Rubber': [(1, 3, 'C', 'G')],
+    'Steel': [(1, 21, 'C', 'G')],
+    'Timber': [(1, 47, 'C', 'G')],
+    'Vinyl': [(1, 4, 'C', 'G')]
+}
+
+# Function to convert column letter to column index
+def column_to_index(column):
+    index = 0
+    for char in column:
+        index = index * 26 + ord(char.upper()) - ord('A') + 1
+    return index
+
+# Iterate over each sheet
+for sheet_name in wb.sheetnames:
+    if sheet_name in ranges_to_clear:
+        ws = wb[sheet_name]
+        print(f"Processing sheet: {sheet_name}")
+        
+        # Clear comments in specified columns
+        for start_row, end_row, start_col, end_col in ranges_to_clear[sheet_name]:
+            start_col_index = column_to_index(start_col)
+            end_col_index = column_to_index(end_col)
+            for row in range(start_row, end_row + 1):
+                for col in range(start_col_index, end_col_index + 1):
+                    ws.cell(row=row, column=col).value = ""
+for sheet_name in wb.sheetnames:
+    ws = wb[sheet_name]
+    ws.delete_rows(1)
+
+# Shift data from columns H and I to columns C and D
+for sheet_name in wb.sheetnames:
+    ws = wb[sheet_name]
+    for row in range(1, ws.max_row + 1):
+        ws.cell(row=row, column=3).value = ws.cell(row=row, column=8).value
+        ws.cell(row=row, column=4).value = ws.cell(row=row, column=9).value
+        ws.cell(row=row, column=8).value = None
+        ws.cell(row=row, column=9).value = None
+
+# Save the workbook
+new_file_name = 'Updated_Material_Data_Final_Cleaned.xlsx'
+if os.path.exists(new_file_name):
+    os.remove(new_file_name)
+wb.save(new_file_name)
+
+print(f"Comments removed and saved to {new_file_name}")
