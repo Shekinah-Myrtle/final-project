@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 from openpyxl import load_workbook
+from openpyxl import Workbook
+
 
 # Path to your Excel file
 file_path = 'CTPROJECTDB.xlsx'
@@ -191,4 +193,66 @@ if os.path.exists(new_file_name):
     os.remove(new_file_name)
 wb.save(new_file_name)
 
-print(f"Comments removed and saved to {new_file_name}")
+print(f"saved to {new_file_name}")
+
+
+# Load the workbook
+wb = load_workbook('Updated_Material_Data_Final_Cleaned.xlsx')
+
+# Define the ranges to copy for each material
+ranges_to_copy = {
+    'Aggregates_Sand': [(2, 11, 'A', 'D')],
+    'Aluminium': [(2, 29, 'A', 'D')],
+    'Asphalt': [(2, 22, 'A', 'D')],
+    'Bitumen': [(2, 4, 'A', 'D')],
+    'Cement_and_Mortar': [(3, 59, 'A', 'D')],
+    'Ceramic': [(2, 4, 'A', 'D')],
+    'Concrete': [(5, 143, 'A', 'D')],
+    'Glass': [(2, 67, 'A', 'D')],
+    'Insulation': [(2, 6, 'A', 'D')],
+    'Paint': [(2, 2, 'A', 'D')],
+    'Plaster': [(2, 4, 'A', 'D')],
+    'Rubber': [(2, 2, 'A', 'D')],
+    'Steel': [(5, 20, 'A', 'D')],
+    'Timber': [(4, 46, 'A', 'D')],
+    'Vinyl': [(2, 3, 'A', 'D')]
+}
+
+# Function to convert column letter to column index
+def column_to_index(column):
+    index = 0
+    for char in column:
+        index = index * 26 + ord(char.upper()) - ord('A') + 1
+    return index
+
+# Create a new workbook
+new_wb = Workbook()
+new_ws = new_wb.active
+new_ws.title = 'Material DQI'
+
+# Set the header
+new_ws.cell(row=1, column=1).value = 'Materials'
+new_ws.cell(row=1, column=2).value = 'Embodied Carbon - kgCO2e/kg'
+new_ws.cell(row=1, column=3).value = 'DQI Score'
+new_ws.cell(row=1, column=4).value = 'DQI Version'
+
+row_index = 2
+for sheet_name in ranges_to_copy.keys():
+    ws = wb[sheet_name]
+    for start_row, end_row, start_col, end_col in ranges_to_copy[sheet_name]:
+        start_col_index = column_to_index(start_col)
+        end_col_index = column_to_index(end_col)
+        for row in range(start_row, end_row + 1):
+            new_ws.cell(row=row_index, column=1).value = ws.cell(row=row, column=1).value
+            new_ws.cell(row=row_index, column=2).value = ws.cell(row=row, column=2).value
+            new_ws.cell(row=row_index, column=3).value = ws.cell(row=row, column=3).value
+            new_ws.cell(row=row_index, column=4).value = ws.cell(row=row, column=4).value
+            row_index += 1
+
+# Save the new workbook
+new_file_name = 'FinalDataSet.xlsx'
+if os.path.exists(new_file_name):
+    os.remove(new_file_name)
+new_wb.save(new_file_name)
+
+print(f"Summary created and saved to {new_file_name}")
