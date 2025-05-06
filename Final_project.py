@@ -599,7 +599,7 @@ plt.tight_layout()
 plt.show()
 plt.savefig('sample_size_plot2.png')
 
-#3rd plott 
+#3rd plot
 # Filter the data for Aggregate material
 aggregate_df = df[df['Materials'].str.contains('aggregate', case=False, na=False)]
 
@@ -642,4 +642,84 @@ fig.tight_layout(rect=[0,0,0.8,1])
 plt.show()
 plt.savefig('sample_size_plot3.png')
 
-#4th plot 
+#4th plot
+# Filter the data for Aggregate material
+aggregate_df = df[df['Materials'].str.contains('aggregate', case=False, na=False)]
+
+# Extract the aggregate type from each material name
+aggregate_types = aggregate_df['Materials'].tolist()
+abbreviations = []
+for material in aggregate_types:
+    abbreviation = ''.join(word[0].upper() for word in material.split())
+    abbreviations.append(abbreviation)
+
+# Create lists for metrics and values
+metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
+x = np.arange(len(aggregate_df['Materials']))
+width = 0.15
+
+# Create a figure
+fig, ax = plt.subplots(figsize=(25,10))  # Increased figure width
+
+# Loop through each metric
+for i, metric in enumerate(metrics):
+    ax.bar(x + i * width, aggregate_df[metric], width, label=metric)
+
+ax.set_xlabel('Aggregate Type', fontsize=14)
+ax.set_ylabel('Values', fontsize=14)
+ax.set_title('Metrics vs Values for Aggregate Material', fontsize=16)
+ax.set_xticks(x + 0.5 * width * (len(metrics) - 1))
+ax.set_xticklabels(abbreviations, rotation=45, ha='right', fontsize=12)
+ax.legend(fontsize=12)
+
+# Add a note with the abbreviations
+note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, aggregate_types))
+ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=12)
+
+# Layout so plots do not overlap
+fig.tight_layout(rect=[0,0,0.75,1])  # Adjusted layout
+
+plt.show()
+
+plt.savefig('sample_size_plot4.png')
+
+#5TH PLOT
+# Filter the data for Asphalt material
+asphalt_df = df[df['Materials'].str.contains('asphalt', case=False, na=False)]
+
+# Extract the asphalt type from each material name
+asphalt_types = asphalt_df['Materials'].tolist()
+abbreviations = []
+for material in asphalt_types:
+    abbreviation = ''.join(word[0].upper() for word in material.split())
+    abbreviations.append(abbreviation)
+
+# Create lists for metrics and values
+metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
+x = np.arange(len(asphalt_df['Materials']))
+width = 0.15
+
+# Create a figure
+fig, ax = plt.subplots(figsize=(25,10))
+
+# Loop through each metric
+for i, metric in enumerate(metrics):
+    ax.bar(x + i * width, asphalt_df[metric], width, label=metric)
+
+ax.set_xlabel('Asphalt Type', fontsize=14)
+ax.set_ylabel('Values', fontsize=14)
+ax.set_title('Metrics vs Values for Asphalt Material', fontsize=16)
+ax.set_xticks(x + 0.5 * width * (len(metrics) - 1))
+ax.set_xticklabels(abbreviations, rotation=45, ha='right', fontsize=12)
+ax.legend(fontsize=12)
+
+# Add a note with the abbreviations
+note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, asphalt_types))
+ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=12)
+
+# Layout so plots do not overlap
+fig.tight_layout(rect=[0,0,0.75,1])
+
+plt.show()
+plt.savefig('sample_size_plot5.png')
+
