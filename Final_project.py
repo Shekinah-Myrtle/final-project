@@ -1,7 +1,9 @@
 import pandas as pd
 import os
+import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 from openpyxl import Workbook
+
 
 
 # Path to your Excel file
@@ -452,3 +454,192 @@ for sheet_name, row_range in ranges_to_copy.items():
 
 # Save the workbook
 wb.save('FinalDataSet.xlsx')
+
+# Load the workbook
+wb = load_workbook('FinalDataSet.xlsx')
+
+# Get the Material_Data_2 sheet
+ws = wb['Material_Data_2']
+
+# Delete rows with empty cells in column A
+rows_to_delete = []
+for row in range(1, ws.max_row + 1):
+    if ws.cell(row=row, column=1).value is None:
+        rows_to_delete.append(row)
+
+# Delete rows in reverse order to avoid index issues
+for row in sorted(rows_to_delete, reverse=True):
+    ws.delete_rows(row)
+
+# Get the Material DQI sheet
+ws = wb['Material DQI']
+
+# Delete rows
+rows_to_delete = [116, 77, 75, 72, 70, 66, 62, 60, 58, 44]
+for row in sorted(rows_to_delete, reverse=True):
+    ws.delete_rows(row)
+
+
+
+# Save the workbook
+wb.save('FinalDataSet.xlsx')
+
+#PLOTTING
+
+# Load the Excel file
+df = pd.read_excel('FinalDataSet.xlsx', sheet_name='Material DQI')
+
+def extract_material_group(name):
+    name = str(name).lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Materials'].apply(extract_material_group)
+
+# Convert 'Embodied Carbon - kgCO2e/kg' column to numeric values
+df['Embodied Carbon - kgCO2e/kg'] = pd.to_numeric(df['Embodied Carbon - kgCO2e/kg'], errors='coerce')
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['Embodied Carbon - kgCO2e/kg'])
+
+# Group by material group and calculate mean embodied carbon
+grouped_df = df.groupby('Material Group')['Embodied Carbon - kgCO2e/kg'].mean().reset_index()
+
+# Create a bar chart of material group vs embodied carbon
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Embodied Carbon - kgCO2e/kg'])
+plt.xlabel('Material Group')
+plt.ylabel('Embodied Carbon - kgCO2e/kg')
+plt.title('Material Group vs Embodied Carbon')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+plt.savefig('sample_size_plot.png')
+
+#2nd plotting 
+# Load the Excel file
+df = pd.read_excel('FinalDataSet.xlsx', sheet_name='Material DQI')
+
+def extract_material_group(name):
+    name = str(name).lower()
+    material_groups = {
+        'steel': 'Steel',
+        'concrete': 'Concrete',
+        'timber': 'Timber',
+        'glass': 'Glass',
+        'aluminum': 'Aluminum',
+        'aluminium': 'Aluminum',
+        'asphalt': 'Asphalt',
+        'bitumen': 'Bitumen',
+        'cement': 'Cement',
+        'aggregate': 'Aggregate',
+        'clay': 'Clay',
+        'paint': 'Paint',
+        'vinyl': 'Vinyl',
+        'insulation': 'Insulation',
+        'rubber': 'Rubber',
+        'plaster': 'Plaster'
+    }
+    for keyword, group in material_groups.items():
+        if keyword in name:
+            return group
+    return 'Other'
+
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Materials'].apply(extract_material_group)
+
+# Convert 'DQI Score' column to numeric values
+df['DQI Score'] = pd.to_numeric(df['DQI Score'], errors='coerce')
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['DQI Score'])
+
+# Group by material group and calculate mean DQI Score
+grouped_df = df.groupby('Material Group')['DQI Score'].mean().reset_index()
+
+# Create a bar chart of material group vs DQI Score
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['DQI Score'])
+plt.xlabel('Material Group')
+plt.ylabel('DQI Score')
+plt.title('Material Group vs DQI Score')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+plt.savefig('sample_size_plot2.png')
+
+#3rd plott 
+# Filter the data for Aggregate material
+aggregate_df = df[df['Materials'].str.contains('aggregate', case=False, na=False)]
+
+# Extract the aggregate type from each material name
+aggregate_types = []
+abbreviations = []
+for material in aggregate_df['Materials']:
+    material = material.lower().replace('aggregate', '').strip().title()
+    aggregate_types.append(material)
+    abbreviation = ''.join(word[0].upper() for word in material.split())
+    abbreviations.append(abbreviation)
+
+aggregate_df['Aggregate Type'] = aggregate_types
+
+# Create lists for metrics and values
+metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
+x = np.arange(len(aggregate_df['Aggregate Type']))
+width = 0.15
+
+# Create a figure
+fig, ax = plt.subplots(figsize=(10,6))
+
+# Loop through each metric
+for i, metric in enumerate(metrics):
+    ax.bar(x + i * width, aggregate_df[metric], width, label=metric)
+
+ax.set_xlabel('Aggregate Type')
+ax.set_ylabel('Values')
+ax.set_title('Metrics vs Values for Aggregate Material')
+ax.set_xticks(x + 0.5 * width * (len(metrics) - 1))
+ax.set_xticklabels(abbreviations, rotation=45, ha='right')
+ax.legend()
+# Add a note with the abbreviations
+note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, aggregate_types))
+ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left')
+
+# Layout so plots do not overlap
+fig.tight_layout(rect=[0,0,0.8,1])
+
+plt.show()
+plt.savefig('sample_size_plot3.png')
+
+#4th plot 
