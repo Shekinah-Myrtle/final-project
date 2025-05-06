@@ -18,7 +18,7 @@ Plots for various materials like bar graphs and radar plots for:
 ** Output Files**
 
 The script generates the following Excel files where this excel has the cleaned dataset:
-- ICE database named as 'CTPROJECTDB'
-- material comparsion dataset
+- ICE database named as 'CTPROJECTDB.xlsx'
+- Material_Comparsion_Dataset.xlsx
 - `finalDataSet.xlsx` – **Final cleaned and processed datasetfor analysis and visualization**
 
