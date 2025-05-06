@@ -1,0 +1,14 @@
+Material,Cost per Unit (USD),Recyclability Index,Lifespan (Years),Embodied Carbon (kgCO?),Energy Consumption (kWh)
+Aggregate,50,0.7,30,200,500
+Aluminum,350,0.8,50,500,1500
+Asphalt,100,0.5,25,250,800
+Cement & Mortar,120,0.2,60,350,1000
+Bitumen,150,0.4,20,150,600
+Clay Bricks,60,0.9,100,300,400
+Concrete,80,0.3,50,150,800
+Glass,200,0.85,70,100,600
+Insulation,25,0.8,40,50,100
+Paint,40,0.6,15,120,200
+Steel,300,0.75,70,400,1000
+Timber,70,0.7,80,180,350
+Vinyl,150,0.6,50,250,700

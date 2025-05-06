@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import seaborn as sns
 from openpyxl import load_workbook
 from openpyxl import Workbook
 
@@ -1129,6 +1130,46 @@ plt.show()
 
 #plot 20
 
+# Load the Excel file
+df = pd.read_excel('FinalDataSet.xlsx', sheet_name='Material_Data2')
+
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+       return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Material'].apply(extract_material_group)
 
 # Convert 'Density (kg m-3)' column to numeric values
 df['Density (kg m-3)'] = pd.to_numeric(df['Density (kg m-3)'], errors='coerce')
@@ -1157,6 +1198,41 @@ df['Specific heat (J kg-1 K-1)'] = pd.to_numeric(df['Specific heat (J kg-1 K-1)'
 # Drop rows with non-numeric values
 df = df.dropna(subset=['Specific heat (J kg-1 K-1)'])
 
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+
 # Apply the function to the 'Material' column
 df['Material Group'] = df['Material'].apply(extract_material_group)
 
@@ -1180,6 +1256,40 @@ df['Thermal Diffusivity (M^2 S-1)'] = pd.to_numeric(df['Thermal Diffusivity (M^2
 
 # Drop rows with non-numeric values
 df = df.dropna(subset=['Thermal Diffusivity (M^2 S-1)'])
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
 # Apply the function to the 'Material' column
 df['Material Group'] = df['Material'].apply(extract_material_group)
 
@@ -1197,3 +1307,49 @@ plt.tight_layout()
 plt.savefig('plot_22.png', bbox_inches='tight')
 plt.show()
 
+#cost analysis 
+# # Load the Material_Comparison_Dataset CSV file
+material_df = pd.read_csv('Material_Comparison_Dataset.csv')
+
+# Load the FinalDataSet Excel file
+final_df = pd.read_excel('FinalDataSet.xlsx')
+
+# Append the material data to the final data
+final_df = pd.concat([final_df, material_df])
+
+# Save the updated final data to the Excel file
+final_df.to_excel('FinalDataSet.xlsx', index=False)
+
+# Create an Excel writer
+with pd.ExcelWriter('FinalDataSet.xlsx', mode='a', if_sheet_exists='replace') as writer:
+    material_df.to_excel(writer, sheet_name='Material Cost',index=False)
+
+# Read the Excel file
+df = pd.read_excel('FinalDataSet.xlsx', sheet_name='Material Cost')
+
+# Define the categories
+categories = ['Cost per Unit (USD)', 'Recyclability Index', 'Embodied Carbon (kgCO?)', 'Energy Consumption (kWh)', 'Lifespan (Years)']
+
+# Normalize the values
+for category in categories:
+    df[category] = df[category] / df[category].max()
+
+# Plot the radar chart
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, polar=True)
+
+for index, row in df.iterrows():
+    values = [row[category] for category in categories]
+    angles = np.linspace(0, 2*np.pi, len(categories), endpoint=False)
+    values.append(values[0])
+    angles = np.append(angles, angles[0])
+    ax.plot(angles, values, 'o-', linewidth=2, label=row['Material'])
+
+ax.set_thetagrids(angles[:-1] * 180/np.pi, categories)
+ax.set_ylim(0, 1)
+ax.set_title('Material Characteristics')
+ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1))
+
+plt.tight_layout()
+plt.savefig('plot_23.png', bbox_inches='tight')
+plt.show()
