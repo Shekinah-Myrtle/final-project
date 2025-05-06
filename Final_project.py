@@ -817,44 +817,44 @@ plt.show()
 plt.savefig('sample_size_plot7.png')
 
 #8TH PLOTTING
- Filter the data for material containing 'mpa' in material column
-mpa_df = df[df['Materials'].str.contains('mpa', case=False, na=False)]
+# Filter the data for Steel material
+steel_df = df[df['Materials'].str.contains('steel', case=False, na=False)]
 
 # Ensure the columns are numeric
-mpa_df['Embodied Carbon - kgCO2e/kg'] = pd.to_numeric(mpa_df['Embodied Carbon - kgCO2e/kg'], errors='coerce')
-mpa_df['DQI Score'] = pd.to_numeric(mpa_df['DQI Score'], errors='coerce')
+steel_df['Embodied Carbon - kgCO2e/kg'] = pd.to_numeric(steel_df['Embodied Carbon - kgCO2e/kg'], errors='coerce')
+steel_df['DQI Score'] = pd.to_numeric(steel_df['DQI Score'], errors='coerce')
 
 # Drop rows with missing values
-mpa_df = mpa_df.dropna(subset=['Embodied Carbon - kgCO2e/kg', 'DQI Score'])
+steel_df = steel_df.dropna(subset=['Embodied Carbon - kgCO2e/kg', 'DQI Score'])
 
-# Extract the material type from each material name
-mpa_types = mpa_df['Materials'].tolist()
+# Extract the steel type from each material name
+steel_types = steel_df['Materials'].tolist()
 abbreviations = []
-for material in mpa_types:
+for material in steel_types:
     abbreviation = ''.join(word[0].upper() for word in material.split())
     abbreviations.append(abbreviation)
 
 # Create lists for metrics and values
 metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
-x = np.arange(len(mpa_df['Materials']))
+x = np.arange(len(steel_df['Materials']))
 width = 0.15
 
 # Create a figure
-fig, ax = plt.subplots(figsize=(25,10))
+fig, ax = plt.subplots(figsize=(30,15))
 
 # Loop through each metric
 for i, metric in enumerate(metrics):
-    ax.bar(x + i * width, mpa_df[metric], width, label=metric)
+    ax.bar(x + i * width, steel_df[metric], width, label=metric)
 
-ax.set_xlabel('Material Type', fontsize=14)
+ax.set_xlabel('Steel Type', fontsize=14)
 ax.set_ylabel('Values', fontsize=14)
-ax.set_title('Metrics vs Values for MPA Material', fontsize=16)
+ax.set_title('Metrics vs Values for Steel Material', fontsize=16)
 ax.set_xticks(x + 0.5 * width * (len(metrics) - 1))
 ax.set_xticklabels(abbreviations, rotation=45, ha='right', fontsize=12)
 ax.legend(fontsize=12)
 
 # Add a note with the abbreviations
-note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, mpa_types))
+note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, steel_types))
 ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=12)
 
 # Layout so plots do not overlap
@@ -863,4 +863,51 @@ fig.tight_layout(rect=[0,0,0.75,1])
 plt.show()
 plt.savefig('sample_size_plot8.png')
 
+#9th plot
+# Filter the data for Insulation material
+insulation_df = df[df['Materials'].str.contains('insulation', case=False, na=False)]
+
+# Ensure the columns are numeric
+insulation_df['Embodied Carbon - kgCO2e/kg'] = pd.to_numeric(insulation_df['Embodied Carbon - kgCO2e/kg'], errors='coerce')
+insulation_df['DQI Score'] = pd.to_numeric(insulation_df['DQI Score'], errors='coerce')
+
+# Drop rows with missing values
+insulation_df = insulation_df.dropna(subset=['Embodied Carbon - kgCO2e/kg', 'DQI Score'])
+
+# Extract the insulation type from each material name
+insulation_types = insulation_df['Materials'].tolist()
+abbreviations = []
+for material in insulation_types:
+    abbreviation = ''.join(word[0].upper() for word in material.split())
+    abbreviations.append(abbreviation)
+
+# Create lists for metrics and values
+metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
+x = np.arange(len(insulation_df['Materials']))
+width = 0.15
+
+# Create a figure
+fig, ax = plt.subplots(figsize=(30,15))
+
+# Loop through each metric
+for i, metric in enumerate(metrics):
+    ax.bar(x + i * width, insulation_df[metric], width, label=metric)
+
+ax.set_xlabel('Insulation Type', fontsize=14)
+ax.set_ylabel('Values', fontsize=14)
+ax.set_title('Metrics vs Values for Insulation Material', fontsize=16)
+ax.set_xticks(x + 0.5 * width * (len(metrics) - 1))
+ax.set_xticklabels(abbreviations, rotation=45, ha='right', fontsize=12)
+ax.legend(fontsize=12)
+
+# Add a note with the abbreviations
+note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, insulation_types))
+ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=12)
+
+# Layout so plots do not overlap
+fig.tight_layout(rect=[0,0,0.75,1])
+
+plt.show()
+plt.savefig('sample_size_plot9.png')
+ 
 
