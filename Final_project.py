@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 import matplotlib.pyplot as plt
 from openpyxl import load_workbook
@@ -459,7 +460,7 @@ wb.save('FinalDataSet.xlsx')
 wb = load_workbook('FinalDataSet.xlsx')
 
 # Get the Material_Data_2 sheet
-ws = wb['Material_Data_2']
+ws = wb['Material_Data2']
 
 # Delete rows with empty cells in column A
 rows_to_delete = []
@@ -544,8 +545,8 @@ plt.ylabel('Embodied Carbon - kgCO2e/kg')
 plt.title('Material Group vs Embodied Carbon')
 plt.xticks(rotation=90)
 plt.tight_layout()
+plt.savefig('plot1.png',bbox_inches='tight')
 plt.show()
-plt.savefig('sample_size_plot.png')
 
 #2nd plotting 
 # Load the Excel file
@@ -589,15 +590,20 @@ df = df.dropna(subset=['DQI Score'])
 grouped_df = df.groupby('Material Group')['DQI Score'].mean().reset_index()
 
 # Create a bar chart of material group vs DQI Score
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(12, 8))
 plt.bar(grouped_df['Material Group'], grouped_df['DQI Score'])
 plt.xlabel('Material Group')
+plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.ylabel('DQI Score')
 plt.title('Material Group vs DQI Score')
 plt.xticks(rotation=90)
+
 plt.tight_layout()
+plt.savefig('plot2.png', bbox_inches='tight')
 plt.show()
-plt.savefig('sample_size_plot2.png')
+
+
+
 
 #3rd plot
 # Filter the data for Aggregate material
@@ -612,7 +618,7 @@ for material in aggregate_df['Materials']:
     abbreviation = ''.join(word[0].upper() for word in material.split())
     abbreviations.append(abbreviation)
 
-aggregate_df['Aggregate Type'] = aggregate_types
+aggregate_df.loc[:,'Aggregate Type'] = aggregate_types
 
 # Create lists for metrics and values
 metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
@@ -638,9 +644,10 @@ ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left')
 
 # Layout so plots do not overlap
 fig.tight_layout(rect=[0,0,0.8,1])
-
+plt.tight_layout()
 plt.show()
-plt.savefig('sample_size_plot3.png')
+
+plt.savefig('plot3.png',bbox_inches='tight')
 
 #4th plot
 # Filter the data for Aggregate material
@@ -677,11 +684,9 @@ note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip
 ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=12)
 
 # Layout so plots do not overlap
-fig.tight_layout(rect=[0,0,0.75,1])  # Adjusted layout
-
+fig.tight_layout(rect=[0,0,0.75,1])
+plt.savefig('plot4.png',bbox_inches='tight')
 plt.show()
-
-plt.savefig('sample_size_plot4.png')
 
 #5TH PLOT
 # Filter the data for Asphalt material
@@ -721,10 +726,11 @@ ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=
 fig.tight_layout(rect=[0,0,0.75,1])
 
 plt.show()
-plt.savefig('sample_size_plot5.png')
+plt.tight_layout()
+plt.savefig('plot5.png', bbox_inches='tight')
 
 #6TH PLOTTING
- Filter the data for Cement material
+#Filter the data for Cement material
 cement_df = df[df['Materials'].str.contains('cement', case=False, na=False)]
 
 # Ensure the columns are numeric
@@ -767,8 +773,9 @@ ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=
 # Layout so plots do not overlap
 fig.tight_layout(rect=[0,0,0.75,1])
 
+plt.tight_layout()
+plt.savefig('plot6.png', bbox_inches='tight')
 plt.show()
-plt.savefig('sample_size_plot6.png')
 
 #7TH PLOTTING
 # Filter the data for Ceramic material
@@ -812,9 +819,9 @@ ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=
 
 # Layout so plots do not overlap
 fig.tight_layout(rect=[0,0,0.75,1])
-
+plt.tight_layout()
+plt.savefig('plot7.png',bbox_inches='tight')
 plt.show()
-plt.savefig('sample_size_plot7.png')
 
 #8TH PLOTTING
 # Filter the data for Steel material
@@ -859,9 +866,9 @@ ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=
 
 # Layout so plots do not overlap
 fig.tight_layout(rect=[0,0,0.75,1])
-
+plt.tight_layout()
+plt.savefig('plot8.png', bbox_inches='tight')
 plt.show()
-plt.savefig('sample_size_plot8.png')
 
 #9th plot
 # Filter the data for Insulation material
@@ -906,10 +913,10 @@ ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=
 
 # Layout so plots do not overlap
 fig.tight_layout(rect=[0,0,0.75,1])
-
+plt.tight_layout()
+plt.savefig('plot9.png', bbox_inches='tight')
 plt.show()
-plt.savefig('sample_size_plot9.png')
- 
+
 #material data sheet 2
 #plotting 10
 # Load the Excel file
@@ -971,7 +978,7 @@ plt.title('Material Group vs Sample Size')
 plt.xticks(rotation=90)
 plt.tight_layout()
 plt.show()
-plt.savefig('plot_10.png')
+plt.savefig('plot_10.png', bbox_inches='tight')
 
 #plot 11
 N = 10
@@ -985,8 +992,9 @@ plt.ylabel('Sample Size')
 plt.title('Top {} Main Materials by Sample Size'.format(N))
 plt.xticks(rotation=90)
 plt.tight_layout()
+plt.tight_layout()
+plt.savefig('plot_11.png', bbox_inches='tight')
 plt.show()
-plt.savefig('plot_11.png')
 
 #plot 12
 def extract_material_group(name):
@@ -1044,8 +1052,8 @@ plt.ylabel('Max Embodied Carbon (kg CO2e/kg)')
 plt.title('Material Group vs Max Embodied Carbon')
 plt.xticks(rotation=90)
 plt.tight_layout()
+plt.savefig('plot_12.png', bbox_inches='tight')
 plt.show()
-plt.savefig('plot_12.png')
 
 #plot 13
 def extract_material_group(name):
@@ -1102,7 +1110,556 @@ plt.ylabel('Standard Deviation Embodied Carbon (kg CO2e/kg)')
 plt.title('Material Group vs Standard Deviation Embodied Carbon')
 plt.xticks(rotation=90)
 plt.tight_layout()
+plt.savefig('plot_13.png', bbox_inches='tight')
 plt.show()
-plt.savefig('plot_13.png')
 
+#plot 14
+def extract_material_group(name):
+    name = str(name).lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Convert 'Embodied Carbon - kgCO2e/kg' column to numeric values
+df['Variance Based on a Sample (Excel Var Function) Embodied Carbon (kg CO2e/kg)'] = pd.to_numeric(df['Variance Based on a Sample (Excel Var Function) Embodied Carbon (kg CO2e/kg)'], errors='coerce')
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['Variance Based on a Sample (Excel Var Function) Embodied Carbon (kg CO2e/kg)'])
+
+# Group by material group and calculate variance of embodied carbon
+grouped_df = df.groupby('Material Group')['Variance Based on a Sample (Excel Var Function) Embodied Carbon (kg CO2e/kg)'].var().reset_index()
+
+# Create a bar chart of material group vs variance of embodied carbon
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Variance Based on a Sample (Excel Var Function) Embodied Carbon (kg CO2e/kg)'])
+plt.xlabel('Material Group')
+plt.ylabel('Variance Embodied Carbon (kg CO2e/kg)')
+plt.title('Material Group vs Variance Embodied Carbon')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.savefig('plot_14.png', bbox_inches='tight')
+plt.show()
+
+
+#plot 15
+# Load the Excel file
+df = pd.read_excel('FinalDataSet.xlsx', sheet_name='Material_Data1')
+
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+
+# Apply the function to the 'Main Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Group the data by material group and calculate the sum of sample size
+grouped_df = df.groupby('Material Group')['Sample Size'].sum().reset_index()
+
+# Create a bar chart of material groups vs sample size
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Sample Size'])
+plt.xlabel('Material Group')
+plt.ylabel('Sample Size')
+plt.title('Sample Size by Material Group')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('plot_15.png', bbox_inches='tight')
+plt.show()
+
+#plot 16
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+# Apply the function to the 'Main Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Group the data by material group and calculate the sum of sample size
+grouped_df = df.groupby('Material Group')['DQI Sample Size (Max 10)'].sum().reset_index()
+
+# Create a bar chart of material groups vs sample size
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['DQI Sample Size (Max 10)'])
+plt.xlabel('Material Group')
+plt.ylabel('DQI Sample Size (Max 10)')
+plt.title('Sample Size by Material Group')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('plot_16.png', bbox_inches='tight')
+plt.show()
+
+#plot 17
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+# Apply the function to the 'Main Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Group the data by material group and calculate the sum of sample size
+grouped_df = df.groupby('Material Group')['DQI Total - % (Max 100%)'].sum().reset_index()
+
+# Create a bar chart of material groups vs sample size
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['DQI Total - % (Max 100%)'])
+plt.xlabel('Material Group')
+plt.ylabel('DQI Total - % (Max 100%)')
+plt.title('Sample Size by Material Group')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('plot_17.png', bbox_inches='tight')
+plt.show()
+
+#plot 18
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+
+# Apply the function to the 'Main Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Group the data by material group and calculate the sum of sample size
+grouped_df = df.groupby('Material Group')['DQI Temporal (Max 5)'].sum().reset_index()
+
+# Create a bar chart of material groups vs sample size
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['DQI Temporal (Max 5)'])
+plt.xlabel('Material Group')
+plt.ylabel('DQI Temporal (Max 5)')
+plt.title('Sample Size by Material Group')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('plot_18.png', bbox_inches='tight')
+plt.show()
+
+#plot 19
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+# Apply the function to the 'Main Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Group the data by material group and calculate the sum of sample size
+grouped_df = df.groupby('Material Group')['DQI Geographic (Max 5)'].sum().reset_index()
+
+# Create a bar chart of material groups vs sample size
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['DQI Geographic (Max 5)'])
+plt.xlabel('Material Group')
+plt.ylabel('DQI Geographic (Max 5)')
+plt.title('Sample Size by Material Group')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('plot_19.png', bbox_inches='tight')
+plt.show()
+
+#plot 20
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+# Apply the function to the 'Main Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Group the data by material group and calculate the sum of sample size
+grouped_df = df.groupby('Material Group')['DQI Transparency (Max 5)'].sum().reset_index()
+
+# Create a bar chart of material groups vs sample size
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['DQI Transparency (Max 5)'])
+plt.xlabel('Material Group')
+plt.ylabel('DQI Transparency (Max 5)')
+plt.title('Sample Size by Material Group')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('plot_20.png', bbox_inches='tight')
+plt.show()
+
+#plot 21
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Material'].apply(extract_material_group)
+
+# Convert 'Density (kg m-3)' column to numeric values
+df['Density (kg m-3)'] = pd.to_numeric(df['Density (kg m-3)'], errors='coerce')
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['Density (kg m-3)'])
+
+# Group by material group and calculate mean density
+grouped_df = df.groupby('Material Group')['Density (kg m-3)'].mean().reset_index()
+
+# Create a bar chart of material group vs density
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Density (kg m-3)'])
+plt.xlabel('Material Group')
+plt.ylabel('Density (kg m-3)')
+plt.title('Material Group vs Density')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.savefig('plot_21.png', bbox_inches='tight')
+plt.show()
+
+#plot 22
+# Convert 'Specific heat (J kg-1 K-1)' column to numeric values
+df['Specific heat (J kg-1 K-1)'] = pd.to_numeric(df['Specific heat (J kg-1 K-1)'], errors='coerce')
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['Specific heat (J kg-1 K-1)'])
+
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+       return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Material'].apply(extract_material_group)
+
+# Group by material group and calculate mean specific heat
+grouped_df = df.groupby('Material Group')['Specific heat (J kg-1 K-1)'].mean().reset_index()
+
+# Create a bar chart of material group vs specific heat
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Specific heat (J kg-1 K-1)'])
+plt.xlabel('Material Group')
+plt.ylabel('Specific heat (J kg-1 K-1)')
+plt.title('Material Group vs Specific heat')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.savefig('plot_22.png', bbox_inches='tight')
+plt.show()
+
+#plot 23
+# Convert 'Thermal Diffusivity (M^2 S-1)' column to numeric values
+df['Thermal Diffusivity (M^2 S-1)'] = pd.to_numeric(df['Thermal Diffusivity (M^2 S-1)'], errors='coerce')
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['Thermal Diffusivity (M^2 S-1)'])
+def extract_material_group(name):
+    name = name.lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Material'].apply(extract_material_group)
+
+# Group by material group and calculate mean thermal diffusivity
+grouped_df = df.groupby('Material Group')['Thermal Diffusivity (M^2 S-1)'].mean().reset_index()
+
+# Create a bar chart of material group vs thermal diffusivity
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Thermal Diffusivity (M^2 S-1)'])
+plt.xlabel('Material Group')
+plt.ylabel('Thermal Diffusivity (M^2 S-1)')
+plt.title('Material Group vs Thermal Diffusivity')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.savefig('plot_23.png', bbox_inches='tight')
+plt.show()
 
