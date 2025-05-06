@@ -6,10 +6,10 @@ from openpyxl import Workbook
 
 
 
-# Path to your Excel file
+# Path to Excel file
 file_path = 'CTPROJECTDB.xlsx'
 
-# Read all sheets; returns a dict: { sheet_name: DataFrame, … }
+# Read all sheets;
 all_sheets = pd.read_excel(file_path, sheet_name=None)
 
 for sheet_name, df in all_sheets.items():
@@ -19,14 +19,14 @@ input_file = 'CTPROJECTDB.xlsx'
 # Load all sheets into a dictionary
 all_sheets = pd.read_excel(input_file, sheet_name=None)
 
-# Define material sheets manually or through pattern matching
+# Define material sheets 
 material_sheets = [
     'Aggregates_Sand', 'Aluminium', 'Asphalt', 'Bitumen', 'Cement_and_Mortar',
     'Ceramic', 'Clay_Bricks', 'Concrete', 'Glass', 'Insulation', 'Paint',
     'Plaster', 'Rubber', 'Steel', 'Timber', 'Vinyl'
 ]
 
-# Create a new Excel file to save filtered material data
+# Create a new Excel file 
 output_file = 'Material_Data_Only.xlsx'
 
 with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
@@ -722,4 +722,145 @@ fig.tight_layout(rect=[0,0,0.75,1])
 
 plt.show()
 plt.savefig('sample_size_plot5.png')
+
+#6TH PLOTTING
+ Filter the data for Cement material
+cement_df = df[df['Materials'].str.contains('cement', case=False, na=False)]
+
+# Ensure the columns are numeric
+cement_df['Embodied Carbon - kgCO2e/kg'] = pd.to_numeric(cement_df['Embodied Carbon - kgCO2e/kg'], errors='coerce')
+cement_df['DQI Score'] = pd.to_numeric(cement_df['DQI Score'], errors='coerce')
+
+# Drop rows with missing values
+cement_df = cement_df.dropna(subset=['Embodied Carbon - kgCO2e/kg', 'DQI Score'])
+
+# Extract the cement type from each material name
+cement_types = cement_df['Materials'].tolist()
+abbreviations = []
+for material in cement_types:
+    abbreviation = ''.join(word[0].upper() for word in material.split())
+    abbreviations.append(abbreviation)
+
+# Create lists for metrics and values
+metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
+x = np.arange(len(cement_df['Materials']))
+width = 0.15
+
+# Create a figure
+fig, ax = plt.subplots(figsize=(25,10))
+
+# Loop through each metric
+for i, metric in enumerate(metrics):
+    ax.bar(x + i * width, cement_df[metric], width, label=metric)
+
+ax.set_xlabel('Cement Type', fontsize=14)
+ax.set_ylabel('Values', fontsize=14)
+ax.set_title('Metrics vs Values for Cement Material', fontsize=16)
+ax.set_xticks(x + 0.5 * width * (len(metrics) - 1))
+ax.set_xticklabels(abbreviations, rotation=45, ha='right', fontsize=12)
+ax.legend(fontsize=12)
+
+# Add a note with the abbreviations
+note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, cement_types))
+ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=12)
+
+# Layout so plots do not overlap
+fig.tight_layout(rect=[0,0,0.75,1])
+
+plt.show()
+plt.savefig('sample_size_plot6.png')
+
+#7TH PLOTTING
+# Filter the data for Ceramic material
+ceramic_df = df[df['Materials'].str.contains('ceramic', case=False, na=False)]
+
+# Ensure the columns are numeric
+ceramic_df['Embodied Carbon - kgCO2e/kg'] = pd.to_numeric(ceramic_df['Embodied Carbon - kgCO2e/kg'], errors='coerce')
+ceramic_df['DQI Score'] = pd.to_numeric(ceramic_df['DQI Score'], errors='coerce')
+
+# Drop rows with missing values
+ceramic_df = ceramic_df.dropna(subset=['Embodied Carbon - kgCO2e/kg', 'DQI Score'])
+
+# Extract the ceramic type from each material name
+ceramic_types = ceramic_df['Materials'].tolist()
+abbreviations = []
+for material in ceramic_types:
+    abbreviation = ''.join(word[0].upper() for word in material.split())
+    abbreviations.append(abbreviation)
+
+# Create lists for metrics and values
+metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
+x = np.arange(len(ceramic_df['Materials']))
+width = 0.15
+
+# Create a figure
+fig, ax = plt.subplots(figsize=(25,10))
+
+# Loop through each metric
+for i, metric in enumerate(metrics):
+    ax.bar(x + i * width, ceramic_df[metric], width, label=metric)
+ax.set_xlabel('Ceramic Type', fontsize=14)
+ax.set_ylabel('Values', fontsize=14)
+ax.set_title('Metrics vs Values for Ceramic Material', fontsize=16)
+ax.set_xticks(x + 0.5 * width * (len(metrics) - 1))
+ax.set_xticklabels(abbreviations, rotation=45, ha='right', fontsize=12)
+ax.legend(fontsize=12)
+
+# Add a note with the abbreviations
+note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, ceramic_types))
+ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=12)
+
+# Layout so plots do not overlap
+fig.tight_layout(rect=[0,0,0.75,1])
+
+plt.show()
+plt.savefig('sample_size_plot7.png')
+
+#8TH PLOTTING
+ Filter the data for material containing 'mpa' in material column
+mpa_df = df[df['Materials'].str.contains('mpa', case=False, na=False)]
+
+# Ensure the columns are numeric
+mpa_df['Embodied Carbon - kgCO2e/kg'] = pd.to_numeric(mpa_df['Embodied Carbon - kgCO2e/kg'], errors='coerce')
+mpa_df['DQI Score'] = pd.to_numeric(mpa_df['DQI Score'], errors='coerce')
+
+# Drop rows with missing values
+mpa_df = mpa_df.dropna(subset=['Embodied Carbon - kgCO2e/kg', 'DQI Score'])
+
+# Extract the material type from each material name
+mpa_types = mpa_df['Materials'].tolist()
+abbreviations = []
+for material in mpa_types:
+    abbreviation = ''.join(word[0].upper() for word in material.split())
+    abbreviations.append(abbreviation)
+
+# Create lists for metrics and values
+metrics = ['Embodied Carbon - kgCO2e/kg','DQI Score']
+x = np.arange(len(mpa_df['Materials']))
+width = 0.15
+
+# Create a figure
+fig, ax = plt.subplots(figsize=(25,10))
+
+# Loop through each metric
+for i, metric in enumerate(metrics):
+    ax.bar(x + i * width, mpa_df[metric], width, label=metric)
+
+ax.set_xlabel('Material Type', fontsize=14)
+ax.set_ylabel('Values', fontsize=14)
+ax.set_title('Metrics vs Values for MPA Material', fontsize=16)
+ax.set_xticks(x + 0.5 * width * (len(metrics) - 1))
+ax.set_xticklabels(abbreviations, rotation=45, ha='right', fontsize=12)
+ax.legend(fontsize=12)
+
+# Add a note with the abbreviations
+note = '\n'.join(f'{abbreviation}: {material}' for abbreviation, material in zip(abbreviations, mpa_types))
+ax.annotate(note, xy=(1.05, 0.5), xycoords='axes fraction', ha='left', fontsize=12)
+
+# Layout so plots do not overlap
+fig.tight_layout(rect=[0,0,0.75,1])
+
+plt.show()
+plt.savefig('sample_size_plot8.png')
+
 
