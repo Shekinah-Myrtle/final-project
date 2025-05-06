@@ -910,4 +910,199 @@ fig.tight_layout(rect=[0,0,0.75,1])
 plt.show()
 plt.savefig('sample_size_plot9.png')
  
+#material data sheet 2
+#plotting 10
+# Load the Excel file
+df = pd.read_excel('FinalDataSet.xlsx', sheet_name='Material Data')
+
+def extract_material_group(name):
+    name = str(name).lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Convert 'Sample Size' column to numeric values
+df['Sample Size'] = pd.DataFrame(pd.to_numeric(df['Sample Size'], errors='coerce'))
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['Sample Size'])
+
+# Group by material group and calculate sum of sample size
+grouped_df = df.groupby('Material Group')['Sample Size'].sum().reset_index()
+
+# Create a bar chart of material group vs sample size
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Sample Size'])
+plt.xlabel('Material Group')
+plt.ylabel('Sample Size')
+plt.title('Material Group vs Sample Size')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+plt.savefig('plot_10.png')
+
+#plot 11
+N = 10
+top_materials = df.groupby('Main Material')['Sample Size'].sum().sort_values(ascending=False).head(N)
+
+# Create a bar chart of main material vs sample size
+plt.figure(figsize=(10, 6))
+plt.bar(top_materials.index, top_materials.values)
+plt.xlabel('Main Material')
+plt.ylabel('Sample Size')
+plt.title('Top {} Main Materials by Sample Size'.format(N))
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+plt.savefig('plot_11.png')
+
+#plot 12
+def extract_material_group(name):
+    name = str(name).lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+       return 'Plaster'
+    else:
+        return 'Other'
+
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Convert 'Embodied Carbon - kgCO2e/kg' column to numeric values
+df['Max Embodied Carbon (kg CO2e/kg)'] = pd.to_numeric(df['Max Embodied Carbon (kg CO2e/kg)'], errors='coerce')
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['Max Embodied Carbon (kg CO2e/kg)'])
+
+# Group by material group and calculate max embodied carbon
+grouped_df = df.groupby('Material Group')['Max Embodied Carbon (kg CO2e/kg)'].max().reset_index()
+
+# Create a bar chart of material group vs max embodied carbon
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Max Embodied Carbon (kg CO2e/kg)'])
+plt.xlabel('Material Group')
+plt.ylabel('Max Embodied Carbon (kg CO2e/kg)')
+plt.title('Material Group vs Max Embodied Carbon')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+plt.savefig('plot_12.png')
+
+#plot 13
+def extract_material_group(name):
+    name = str(name).lower()
+    if 'steel' in name:
+        return 'Steel'
+    elif 'concrete' in name:
+        return 'Concrete'
+    elif 'timber' in name:
+        return 'Timber'
+    elif 'glass' in name:
+        return 'Glass'
+    elif 'aluminum' in name or 'aluminium' in name:
+        return 'Aluminum'
+    elif 'asphalt' in name:
+        return 'Asphalt'
+    elif 'bitumen' in name:
+        return 'Bitumen'
+    elif 'cement' in name:
+        return 'Cement'
+    elif 'aggregate' in name:
+        return 'Aggregate'
+    elif 'clay' in name:
+        return 'Clay'
+    elif 'paint' in name:
+        return 'Paint'
+    elif 'vinyl' in name:
+        return 'Vinyl'
+    elif 'insulation' in name:
+        return 'Insulation'
+    elif 'rubber' in name:
+        return 'Rubber'
+    elif 'plaster' in name:
+        return 'Plaster'
+    else:
+        return 'Other'
+# Apply the function to the 'Material' column
+df['Material Group'] = df['Main Material'].apply(extract_material_group)
+
+# Convert 'Embodied Carbon - kgCO2e/kg' column to numeric values
+df['Standard Deviation Embodied Carbon (kg CO2e/kg)'] = pd.to_numeric(df['Standard Deviation Embodied Carbon (kg CO2e/kg)'], errors='coerce')
+
+# Drop rows with non-numeric values
+df = df.dropna(subset=['Standard Deviation Embodied Carbon (kg CO2e/kg)'])
+
+# Group by material group and calculate standard deviation of embodied carbon
+grouped_df = df.groupby('Material Group')['Standard Deviation Embodied Carbon (kg CO2e/kg)'].std().reset_index()
+
+# Create a bar chart of material group vs standard deviation of embodied carbon
+plt.figure(figsize=(10, 6))
+plt.bar(grouped_df['Material Group'], grouped_df['Standard Deviation Embodied Carbon (kg CO2e/kg)'])
+plt.xlabel('Material Group')
+plt.ylabel('Standard Deviation Embodied Carbon (kg CO2e/kg)')
+plt.title('Material Group vs Standard Deviation Embodied Carbon')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+plt.savefig('plot_13.png')
+
 
