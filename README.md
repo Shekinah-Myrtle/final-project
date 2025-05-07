@@ -14,8 +14,8 @@ Plots for various materials like bar graphs and radar plots for:
   - Lifespan
 - Comparative analysis across materials
 - Visualization-ready outputs
-- 
-** Output Files**
+**for python code - final_project.py**
+  **Output Files**
 
 The script generates the following Excel files where this excel has the cleaned dataset:
 - 'CTPROJECTDB.xlsx' -ICE database- embodied carbon details
