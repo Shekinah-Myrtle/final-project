@@ -591,7 +591,7 @@ grouped_df = df.groupby('Material Group')['DQI Score'].mean().reset_index()
 
 # Create a bar chart of material group vs DQI Score
 plt.figure(figsize=(12, 8))
-plt.bar(grouped_df['Material Group'], grouped_df['DQI Score'])
+plt.scatter(grouped_df['Material Group'], grouped_df['DQI Score'])
 plt.xlabel('Material Group')
 plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.ylabel('DQI Score')
@@ -803,7 +803,7 @@ fig, ax = plt.subplots(figsize=(30,15))
 
 # Loop through each metric
 for i, metric in enumerate(metrics):
-    ax.bar(x + i * width, steel_df[metric], width, label=metric)
+    ax.fill_between(x, steel_df[metric], where=(steel_df[metric].notnull()), alpha=0.5, label=metric)
 
 ax.set_xlabel('Steel Type', fontsize=14)
 ax.set_ylabel('Values', fontsize=14)
@@ -850,7 +850,7 @@ fig, ax = plt.subplots(figsize=(30,15))
 
 # Loop through each metric
 for i, metric in enumerate(metrics):
-    ax.bar(x + i * width, insulation_df[metric], width, label=metric)
+    ax.fill_between(x, insulation_df[metric], where=(insulation_df[metric].notnull()), alpha=0.5, label=metric)
 
 ax.set_xlabel('Insulation Type', fontsize=14)
 ax.set_ylabel('Values', fontsize=14)
@@ -923,7 +923,7 @@ grouped_df = df.groupby('Material Group')['Sample Size'].sum().reset_index()
 
 # Create a bar chart of material group vs sample size
 plt.figure(figsize=(10, 6))
-plt.bar(grouped_df['Material Group'], grouped_df['Sample Size'])
+plt.scatter(grouped_df['Material Group'], grouped_df['Sample Size'])
 plt.xlabel('Material Group')
 plt.ylabel('Sample Size')
 plt.title('Material Group vs Sample Size')
@@ -1118,7 +1118,7 @@ grouped_df = df.groupby('Material Group')['DQI Transparency (Max 5)'].sum().rese
 
 # Create a bar chart of material groups vs sample size
 plt.figure(figsize=(10, 6))
-plt.bar(grouped_df['Material Group'], grouped_df['DQI Transparency (Max 5)'])
+plt.fill_between(grouped_df['Material Group'], grouped_df['DQI Transparency (Max 5)'], color='skyblue', alpha=0.4)
 plt.xlabel('Material Group')
 plt.ylabel('DQI Transparency (Max 5)')
 plt.title('Sample Size by Material Group')
@@ -1179,9 +1179,9 @@ df = df.dropna(subset=['Density (kg m-3)'])
 # Group by material group and calculate mean density
 grouped_df = df.groupby('Material Group')['Density (kg m-3)'].mean().reset_index()
 
-# Create a bar chart of material group vs density
+# Create a scatter chart of material group vs density
 plt.figure(figsize=(10, 6))
-plt.bar(grouped_df['Material Group'], grouped_df['Density (kg m-3)'])
+plt.scatter(grouped_df['Material Group'], grouped_df['Density (kg m-3)'])
 plt.xlabel('Material Group')
 plt.ylabel('Density (kg m-3)')
 plt.title('Material Group vs Density')
@@ -1240,7 +1240,7 @@ grouped_df = df.groupby('Material Group')['Specific heat (J kg-1 K-1)'].mean().r
 
 # Create a bar chart of material group vs specific heat
 plt.figure(figsize=(10, 6))
-plt.bar(grouped_df['Material Group'], grouped_df['Specific heat (J kg-1 K-1)'])
+plt.scatter(grouped_df['Material Group'], grouped_df['Specific heat (J kg-1 K-1)'])
 plt.xlabel('Material Group')
 plt.ylabel('Specific heat (J kg-1 K-1)')
 plt.title('Material Group vs Specific heat')
@@ -1295,9 +1295,12 @@ df['Material Group'] = df['Material'].apply(extract_material_group)
 # Group by material group and calculate mean thermal diffusivity
 grouped_df = df.groupby('Material Group')['Thermal Diffusivity (M^2 S-1)'].mean().reset_index()
 
-# Create a bar chart of material group vs thermal diffusivity
+# Create a plot of material group vs thermal diffusivity
 plt.figure(figsize=(10, 6))
-plt.bar(grouped_df['Material Group'], grouped_df['Thermal Diffusivity (M^2 S-1)'])
+# Plot
+plt.fill_between(grouped_df['Material Group'], grouped_df['Thermal Diffusivity (M^2 S-1)'], color='skyblue', alpha=0.4)  
+# Plot the boundary line of the area
+plt.plot(grouped_df['Material Group'], grouped_df['Thermal Diffusivity (M^2 S-1)'], color='Slateblue', alpha=0.6)
 plt.xlabel('Material Group')
 plt.ylabel('Thermal Diffusivity (M^2 S-1)')
 plt.title('Material Group vs Thermal Diffusivity')
